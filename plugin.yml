@@ -1,0 +1,38 @@
+name: Quests
+version: '${project.version}'
+main: de.quests.QuestsPlugin
+api-version: '1.26'
+description: Quest-/Aufgabensystem mit GUI, komplett ueber die Config erweiterbar
+authors: [Quests]
+
+commands:
+  questblock:
+    description: Verwaltet den Quest-Block (set, remove, list)
+    usage: /<command> <set|remove|list>
+    permission: quests.admin
+  quests:
+    description: Verwaltung des Quest-Systems
+    usage: /<command> <reload|reset|progress>
+    aliases: [quest]
+
+permissions:
+  quests.admin:
+    description: Voller Zugriff auf alle Quest-Funktionen
+    default: op
+    children:
+      quests.reload: true
+      quests.reset: true
+      quests.progress: true
+      quests.use: true
+  quests.reload:
+    description: Config neu laden
+    default: op
+  quests.reset:
+    description: Spielerfortschritt zuruecksetzen
+    default: op
+  quests.progress:
+    description: Den eigenen Fortschritt anzeigen (fremden Fortschritt nur mit quests.admin)
+    default: true
+  quests.use:
+    description: Das Quest-Menue am Quest-Block oeffnen
+    default: true

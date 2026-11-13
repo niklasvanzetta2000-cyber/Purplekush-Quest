@@ -1,0 +1,206 @@
+# =============================================================================
+#  Quests - config.yml
+#  Neue Aufgaben koennen ausschliesslich hier hinzugefuegt werden.
+#  Nach Aenderungen: /quests reload
+#  Farben: &-Codes und Hex (&#RRGGBB). Zahlen: siehe number-locale.
+# =============================================================================
+
+# Sprache fuer Zahlenformate (de-DE = 3.548 und 35,5)
+number-locale: "de-DE"
+
+storage:
+  # Wie oft (in Sekunden) geaenderte Spielerdaten automatisch gespeichert werden (mindestens 30)
+  autosave-seconds: 300
+
+tracking:
+  # Zaehlen Abbauvorgaenge im Kreativmodus?
+  count-creative: false
+
+quest-block:
+  # Maximale Entfernung, aus der /questblock set den angeschauten Block erfasst
+  max-distance: 6
+
+# -----------------------------------------------------------------------------
+#  GUI
+#  Platzhalter in der Lore: {name} {progress} {target} {percent} {bar} {reward} {status}
+#  Die Zeile "{description}" wird durch die Beschreibung der Quest ersetzt.
+# -----------------------------------------------------------------------------
+gui:
+  title: "&8✦ &6Quests"
+  rows: 3
+  filler:
+    enabled: true
+    material: GRAY_STAINED_GLASS_PANE
+  progress-bar:
+    length: 20
+    filled-char: "|"
+    empty-char: "|"
+    filled-color: "&a"
+    empty-color: "&7"
+  lore:
+    - "{description}"
+    - ""
+    - "&7Fortschritt: &f{progress} &7/ &f{target}"
+    - "{bar} &f{percent}%"
+    - ""
+    - "&7Belohnung: {reward}"
+    - ""
+    - "{status}"
+  status:
+    in-progress: "&c✘ Noch nicht abgeschlossen"
+    claimable: "&e✔ Abholbereit &7- &eKlicke zum Abholen!"
+    claimed: "&a✔ Bereits abgeholt"
+  reward-none: "&7Keine"
+
+# -----------------------------------------------------------------------------
+#  Effekte
+#  sound: Name wie ENTITY_PLAYER_LEVELUP (oder Schreibweise mit Punkten,
+#         z. B. entity.experience_orb.pickup)
+#  particles: type, count, offset (Streuung), speed
+# -----------------------------------------------------------------------------
+effects:
+  gui-open:
+    sound: BLOCK_CHEST_OPEN
+    volume: 1.0
+    pitch: 1.0
+  quest-complete:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.0
+  reward-claim:
+    sound: ENTITY_PLAYER_LEVELUP
+    volume: 1.0
+    pitch: 1.4
+    particles:
+      - type: HAPPY_VILLAGER
+        count: 30
+        offset: 0.6
+        speed: 0.0
+      - type: TOTEM_OF_UNDYING
+        count: 40
+        offset: 0.3
+        speed: 0.4
+
+# -----------------------------------------------------------------------------
+#  Nachrichten
+# -----------------------------------------------------------------------------
+messages:
+  prefix: "&8[&6Quests&8] &7"
+  no-permission: "&cDazu hast du keine Berechtigung."
+  players-only: "&cDieser Befehl kann nur von Spielern benutzt werden."
+  usage-questblock: "&7Benutzung: &f/questblock <set|remove|list>"
+  usage-reload: "&7Benutzung: &f/quests reload"
+  usage-reset: "&7Benutzung: &f/quests reset <Spieler> [Quest|all]"
+  usage-progress: "&7Benutzung: &f/quests progress [Spieler]"
+  questblock-look-at-block: "&cSchau einen Block an, den du als Quest-Block festlegen willst."
+  questblock-set: "&aQuest-Block gespeichert &7({location})&a. Rechtsklick oeffnet das Quest-Menue."
+  questblock-already: "&eDieser Block ist bereits ein Quest-Block &7({location})&e."
+  questblock-removed: "&aQuest-Block entfernt."
+  questblock-none: "&cDieser Block ist kein Quest-Block."
+  questblock-protected: "&cDieser Block kann nicht abgebaut werden."
+  questblock-list-header: "&7Quest-Bloecke: &f{count}"
+  questblock-list-line: "&8 - &f{location}"
+  reload-done: "&aKonfiguration neu geladen. &7({count} Quests)"
+  reset-done: "&aFortschritt von &f{player} &azurueckgesetzt &7({quest})&a."
+  all-quests: "alle Quests"
+  player-not-found: "&cSpieler &f{player} &cwurde nicht gefunden."
+  quest-unknown: "&cQuest &f{quest} &cexistiert nicht."
+  quest-completed: "&aQuest abgeschlossen: &f{quest}&a! Hole deine Belohnung am Quest-Block ab."
+  reward-claimed: "&aBelohnung fuer &f{quest} &aerhalten!"
+  reward-not-ready: "&cDiese Quest ist noch nicht abgeschlossen."
+  reward-already-claimed: "&eDiese Belohnung hast du bereits abgeholt."
+  inventory-full: "&eDein Inventar war voll - die Belohnung wurde vor dir fallen gelassen."
+  progress-header: "&7Fortschritt von &f{player}&7:"
+  progress-line: "&8 - &f{quest}&7: &f{progress}&7/&f{target} &8(&f{percent}%&8) {status}"
+
+# -----------------------------------------------------------------------------
+#  Quests
+#
+#  Pflichtfelder:  icon, target, type
+#  Typen:
+#    BREAK_BLOCKS    Zaehlt abgebaute Bloecke. Mit "tool" nur mit diesem Werkzeug
+#                    (und standardmaessig nur, wenn der Block damit "korrekt" abgebaut
+#                    wird). Mit "materials" zusaetzlich auf bestimmte Bloecke begrenzbar.
+#    BREAK_SPECIFIC  Zaehlt nur die Bloecke aus "materials".
+#  Optionale Felder:
+#    display-name, description (Liste), tool (ANY, PICKAXE, AXE, SHOVEL, HOE, SHEARS, SWORD),
+#    materials (Wildcards erlaubt: "*_LOG", "*_ORE"), correct-tool-only (true/false),
+#    slot (0-basiert, sonst automatisch), enabled (false = Quest ausblenden)
+#  Belohnung (reward):
+#    material, amount, name, lore, enchants, item-flags, unbreakable, custom-model-data,
+#    commands (Konsolenbefehle, {player} = Spielername), display (Text im GUI)
+#  Die Quest-ID (z. B. mine_blocks) darf keinen Punkt enthalten und sollte
+#  nach dem ersten Einsatz nicht mehr geaendert werden (Fortschritt haengt daran).
+# -----------------------------------------------------------------------------
+quests:
+
+  mine_blocks:
+    icon: DIAMOND_PICKAXE
+    display-name: "&bBaue Blöcke ab"
+    description:
+      - "&7Baue insgesamt 10.000 Blöcke"
+      - "&7mit einer Spitzhacke ab."
+    slot: 11
+    target: 10000
+    type: BREAK_BLOCKS
+    tool: PICKAXE
+    reward:
+      material: DIAMOND_PICKAXE
+      amount: 1
+      name: "&bSpitzhacke des Bergmanns"
+      lore:
+        - "&7Belohnung für 10.000 abgebaute Blöcke"
+      enchants:
+        EFFICIENCY: 6
+        UNBREAKING: 3
+      item-flags: []
+      unbreakable: false
+      display: "&bDiamantspitzhacke &7(Effizienz VI)"
+
+  chop_wood:
+    icon: DIAMOND_AXE
+    display-name: "&aHolzfäller"
+    description:
+      - "&7Baue 10.000 Holzblöcke ab."
+    slot: 15
+    target: 10000
+    type: BREAK_SPECIFIC
+    materials:
+      - OAK_LOG
+      - SPRUCE_LOG
+      - BIRCH_LOG
+      - DARK_OAK_LOG
+      - JUNGLE_LOG
+      - ACACIA_LOG
+      - CHERRY_LOG
+      - MANGROVE_LOG
+      - CRIMSON_STEM
+      - WARPED_STEM
+    reward:
+      material: DIAMOND_AXE
+      amount: 1
+      name: "&aAxt des Holzfällers"
+      enchants:
+        EFFICIENCY: 6
+        UNBREAKING: 3
+      display: "&aDiamantaxt &7(Effizienz VI)"
+
+  # Beispiel fuer eine weitere Quest (ohne Java-Aenderung): Wildcards und Konsolenbefehl
+  ore_digger:
+    icon: IRON_PICKAXE
+    display-name: "&6Erzsucher"
+    description:
+      - "&7Baue 500 Erze mit einer Spitzhacke ab."
+    slot: 13
+    target: 500
+    type: BREAK_BLOCKS
+    tool: PICKAXE
+    materials:
+      - "*_ORE"
+      - ANCIENT_DEBRIS
+    reward:
+      material: DIAMOND
+      amount: 16
+      commands:
+        - "xp give {player} 30 levels"
+      display: "&b16x Diamant &7+ &a30 Level"
